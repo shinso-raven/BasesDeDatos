@@ -57,7 +57,6 @@ DROP TABLE IF EXISTS `abogadoscaso`;
 CREATE TABLE `abogadoscaso` (
   `idCaso` int NOT NULL,
   `idAbogado` int NOT NULL,
-  `HorasCaso` int NOT NULL,
   PRIMARY KEY (`idAbogado`,`idCaso`),
   KEY `FK_abogadoscasoabogado_idx` (`idAbogado`),
   KEY `FK_abogadoscasocaso` (`idCaso`),
@@ -86,7 +85,6 @@ CREATE TABLE `agravantescaso` (
   `idAgravante` int NOT NULL AUTO_INCREMENT,
   `idCaso` int NOT NULL,
   `Descripcion` varchar(200) NOT NULL,
-  `Sentencia` int NOT NULL,
   PRIMARY KEY (`idAgravante`),
   UNIQUE KEY `idAgravante_UNIQUE` (`idAgravante`),
   KEY `FK_agravantescasocaso_idx` (`idCaso`),
@@ -118,6 +116,7 @@ CREATE TABLE `caso` (
   `idTribunal` int NOT NULL,
   `DecisionFinal` varchar(200) NOT NULL,
   `IdCategoria` int NOT NULL,
+  `PosturaDelCaso` varchar(50) NOT NULL,
   PRIMARY KEY (`IdCaso`),
   UNIQUE KEY `IdCaso_UNIQUE` (`IdCaso`),
   KEY `FK_casocategoria_idx` (`IdCategoria`),
@@ -147,6 +146,7 @@ CREATE TABLE `categoria` (
   `IdCategoria` int NOT NULL AUTO_INCREMENT,
   `idTipoJudicial` int NOT NULL,
   `nombre` varchar(100) NOT NULL,
+  `PenaMaxima` int NOT NULL,
   PRIMARY KEY (`IdCategoria`),
   UNIQUE KEY `IdCategoria_UNIQUE` (`IdCategoria`),
   KEY `FK_categoriatipojudicial_idx` (`idTipoJudicial`),
@@ -175,6 +175,8 @@ CREATE TABLE `causascaso` (
   `idCaso` int NOT NULL,
   `ResumenCausa` varchar(200) NOT NULL,
   `FechaAsistencia` date NOT NULL,
+  `HorasDedicadas` int NOT NULL,
+  `EstadoJuicio` varchar(20) NOT NULL,
   PRIMARY KEY (`idCausa`),
   UNIQUE KEY `idCausa_UNIQUE` (`idCausa`),
   KEY `FK_causascasocaso_idx` (`idCaso`),
@@ -302,30 +304,6 @@ LOCK TABLES `especialidad abogado` WRITE;
 UNLOCK TABLES;
 
 --
--- Table structure for table `especialidad fiscal`
---
-
-DROP TABLE IF EXISTS `especialidad fiscal`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `especialidad fiscal` (
-  `idEspecialidadFiscal` int NOT NULL AUTO_INCREMENT,
-  `Nombre` varchar(100) NOT NULL,
-  PRIMARY KEY (`idEspecialidadFiscal`),
-  UNIQUE KEY `idEspecialidadFiscal_UNIQUE` (`idEspecialidadFiscal`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `especialidad fiscal`
---
-
-LOCK TABLES `especialidad fiscal` WRITE;
-/*!40000 ALTER TABLE `especialidad fiscal` DISABLE KEYS */;
-/*!40000 ALTER TABLE `especialidad fiscal` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `fiscal`
 --
 
@@ -342,7 +320,7 @@ CREATE TABLE `fiscal` (
   PRIMARY KEY (`idFiscal`),
   UNIQUE KEY `idFiscal_UNIQUE` (`idFiscal`),
   KEY `FK_fiscalespecialidadfiscal_idx` (`idEspecialidadFiscal`),
-  CONSTRAINT `FK_fiscalespecialidadfiscal` FOREIGN KEY (`idEspecialidadFiscal`) REFERENCES `especialidad fiscal` (`idEspecialidadFiscal`) ON DELETE RESTRICT ON UPDATE RESTRICT
+  CONSTRAINT `FK_fiscalespecialidadabogado` FOREIGN KEY (`idEspecialidadFiscal`) REFERENCES `especialidad abogado` (`idEspecialidad`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -516,4 +494,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-12-26 20:04:14
+-- Dump completed on 2023-12-26 23:50:42
